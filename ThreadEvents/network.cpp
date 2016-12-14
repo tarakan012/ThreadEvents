@@ -7,7 +7,7 @@ UInt8* Parcer::ptrUint8()
 
 void Parcer::writeBuffer(Parcer& parcer)
 {
-	_buffer.write(parcer._buffer.begin(), parcer._buffer.size());
+	_buffer.write(parcer._buffer.begin(), parcer._buffer.used());
 }
 
 void Parcer::writeBuffer(std::vector<UInt8>& ptr)

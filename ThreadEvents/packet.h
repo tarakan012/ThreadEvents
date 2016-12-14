@@ -83,7 +83,15 @@ public:
 };
 class Characters
 {
+	
 public:
+	Characters() {
+		_flag = 1;
+		_name = "Haruki";
+		_job = "golang-ru.slack.com";
+		_level = 1000;
+		_look._race = 806;
+	}
 	UInt8 _flag;
 	std::string _name;
 	std::string _job;
@@ -103,7 +111,7 @@ private:
 	UInt32 _encription;
 	UInt32 _dwFlag;
 	std::vector<UInt8> _key;
-	Characters _character;
+	vector<Characters> _character;
 };
 
 void OutcomingAuth::process()
@@ -111,12 +119,12 @@ void OutcomingAuth::process()
 	_errorCode = 0;
 	_pincode = 1;
 	_encription = 0;
-	_dwFlag = 12800;
-	_character._flag = 1;
-	_character._name = "Pupkin";
-	_character._job = "voujer";
-	_character._level = 45;
-	_character._look._race = 806;
+	_dwFlag = 12820;
+	_character.resize(3);
+	Characters charOne, charTwo, charThree;
+	_character[0] = charOne;
+	_character[1]= charTwo;
+	_character[2] = charThree;
 
 	
 }
@@ -132,37 +140,41 @@ void OutcomingAuth::handler(Parcer& netes) {
 	}
 	netes.writeBuffer(_key); // 10 ++
 
-	UInt8 sizeCharacter = 1;
+	UInt8 sizeCharacter = 3;
 	netes.writeUint8(sizeCharacter); // 1
-	netes.writeUint8(_character._flag); //1 ++14
-	
-
-	netes.writeString(_character._name); // 6 23
-
-	netes.writeString(_character._job); // 6
-	netes.writeUint8(_character._flag); // 1
-	
-
-	netes.writeUint16(UInt16(1626), LittleEndian); // 2
-	netes.writeUint8(_character._look._synType); // 1
-	netes.writeUint16(_character._look._race, LittleEndian); //2
-	netes.writeUint8(_character._look._boatCheck); //1
-	std::cout << netes.sizeBuffer() << "qweweqwewqe";
-	for (int i = 0; i < 10; ++i)
+	for (size_t q = 0; q < 3; q++)
 	{
-		netes.writeUint16(_character._look._items[i]._id, LittleEndian); // 2 * 10
-		//_character._look._items[i]._pass.reserve(160);
-		
-		for (int j = 0; j < 160; ++j) {
-			_character._look._items[i]._pass.push_back(0);
-		}
-		netes.writeBuffer(_character._look._items[i]._pass); // 160 * 10
-	}
-	std::cout << netes.sizeBuffer() << "qweweqwewqe";
+		netes.writeUint8(_character[q]._flag); //1 ++14
 
-	netes.writeUint16(_character._look._hair, LittleEndian); // 10
+
+		netes.writeString(_character[q]._name); // 6 23
+
+		netes.writeString(_character[q]._job); // 6
+		netes.writeUint16(_character[q]._level, LittleEndian); // 1
+
+		netes.writeUint16(UInt16(1626), LittleEndian); // 2
+		netes.writeUint8(_character[q]._look._synType); // 1
+		netes.writeUint16(_character[q]._look._race, LittleEndian); //2
+		netes.writeUint8(_character[q]._look._boatCheck); //1
+
+		for (int i = 0; i < 10; ++i)
+		{
+			netes.writeUint16(_character[q]._look._items[i]._id, LittleEndian); // 2 * 10
+																			 //_character._look._items[i]._pass.reserve(160);
+
+			for (int j = 0; j < 160; ++j) {
+				_character[q]._look._items[i]._pass.push_back(0);
+			}
+			netes.writeBuffer(_character[q]._look._items[i]._pass); // 160 * 10
+		}
+		netes.writeUint16(_character[q]._look._hair, LittleEndian); // 10
+
+	}
+	
+	
+
 	netes.writeUint8(_pincode); // 1
-	netes.writeUint16(_encription, LittleEndian); // 2
+	netes.writeUint32(_encription, LittleEndian); // 2
 	netes.writeUint32(_dwFlag, LittleEndian); // 4
 }
 
@@ -209,28 +221,30 @@ struct PacketHeader
 
 void encode(int opcode, vector<UInt8>& packet)
 {
-	Parcer netes(2100);
-	Parcer t_netes(2000);
+	Parcer netes(6000);
+	Parcer t_netes(5500);
 	Packet p;
 	p.NewPacket();
 	auto pkg = p.getPck(opcode);
 	pkg->process();
 	pkg->handler(t_netes);
 	int Len = t_netes.sizeBuffer() + 8;
-	PacketHeader header = { Len,128,940 };
+	std::cout << "LEN: " << Len; // 33
+	PacketHeader header = { Len,128,opcode };
 	netes.writeUint16(header.Len,LittleEndian);
 	netes.writeUint32(header.UniqueId,BigEndian);
 	netes.writeUint16(header.Opcode,LittleEndian);
-	//std::cout << netes.ptrUint8()[1];
+	cout << "SizeNetes: " << netes.sizeBuffer(); //8
 	netes.writeBuffer(t_netes);
 	UInt8* temp = netes.ptrUint8();
-	std::cout << netes.sizeBuffer();
-	
+	std::cout << "SizeNetesOut: " << netes.sizeBuffer(); 
+
 	for (int i = 0; i < netes.sizeBuffer(); i++)
 	{
-		packet.push_back(temp[i]);
+		packet.push_back(*(temp+i));
 	}
-		
+	//std::cout << "Element: " << *(packet.begin()+1);
+
 }
 
 void decode(){}
