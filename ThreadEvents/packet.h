@@ -1,58 +1,89 @@
 #pragma once
+
+#ifndef _PACKET_H
+#define _PACKET_H
+
+
+
 #include "Poco/DateTime.h"
 #include "Poco/DateTimeFormatter.h"
+
 #include "Poco/FIFOBuffer.h"
-#include "Poco/ByteOrder.h"
+
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Poco/Any.h"
-#include "Poco/Net/StreamSocket.h"
-#include "Poco/Net/ServerSocket.h"
-#include "Poco/Net/SocketAddress.h"
-#include "Poco/Buffer.h"
+#include <unordered_map>
+#include <memory>
+
 #include "network.h"
 
-using namespace std;
-
-using Poco::Any;
-using Poco::ByteOrder;
-using Poco::Buffer;
-using Poco::Net::SocketAddress;
-using Poco::Net::ServerSocket;
-using Poco::Net::StreamSocket;
 using Poco::DateTime;
 using Poco::DateTimeFormatter;
 using Poco::UInt16;
 using Poco::UInt32;
 using Poco::UInt8;
 using Poco::FIFOBuffer;
-#include <unordered_map>
-#include <memory>
+
+using namespace std;
+
+
 class PacketFactory {
 public:
 	virtual int packet() = 0;
 	virtual void process() = 0;
 	virtual void handler(Parcer&) = 0;
 };
+
+class IncomingAuth : public PacketFactory
+{
+public:
+	int packet();
+	void process();
+	void handler(Parcer&);
+private:
+	string _key;
+	string _login;
+	string _password;
+	string _mac;
+	UInt16 _isCheat;
+	UInt16 _clientVersion;
+};
+
+void IncomingAuth::handler(Parcer& netes)
+{
+	netes.readString(_key);
+	netes.readString(_login);
+	netes.readString(_password);
+	netes.readString(_mac);
+	netes.readUint16(_isCheat, LittleEndian);
+	netes.readUint16(_clientVersion, LittleEndian);
+
+}
+
+void IncomingAuth::process()
+{
+	cout << "Login: " <<_login << "Version: " << _clientVersion;
+}
+
+int IncomingAuth::packet()
+{
+	return 0;
+}
+
 class Packet
 {
 public:
 	auto getPck(int);
 	void NewPacket();
 private:
-	//std::unordered_map<int, std::shared_ptr<PacketFactory>> pills;
-	std::unordered_map<int, std::shared_ptr<PacketFactory>> pills;
+	unordered_map<int, shared_ptr<PacketFactory>> pills;
 };
 
 auto Packet::getPck(int opcode)
-{
-	
-	
+{	
 	return pills[opcode];
 }
-
-
 
 class OutcomingDate : public PacketFactory
 {
@@ -61,7 +92,7 @@ public:
 	void process();
 	void handler(Parcer&);
 private:
-	std::string _time;
+	string _time;
 };
 
 class Items
@@ -69,8 +100,9 @@ class Items
 public:
 	
 	UInt16 _id = 0;
-	std::vector<UInt8> _pass;
+	vector<UInt8> _pass;
 };
+
 class CharacterLook
 {
 public:
@@ -81,9 +113,9 @@ public:
 	UInt16 _hair = 0;
 
 };
+
 class Characters
 {
-	
 public:
 	Characters() {
 		_flag = 1;
@@ -93,11 +125,12 @@ public:
 		_look._race = 806;
 	}
 	UInt8 _flag;
-	std::string _name;
-	std::string _job;
+	string _name;
+	string _job;
 	UInt16 _level;
 	CharacterLook _look;
 };
+
 class OutcomingAuth : public PacketFactory
 {
 public:
@@ -110,7 +143,7 @@ private:
 	UInt8 _pincode;
 	UInt32 _encription;
 	UInt32 _dwFlag;
-	std::vector<UInt8> _key;
+	vector<UInt8> _key;
 	vector<Characters> _character;
 };
 
@@ -125,15 +158,13 @@ void OutcomingAuth::process()
 	_character[0] = charOne;
 	_character[1]= charTwo;
 	_character[2] = charThree;
-
-	
 }
 
 void OutcomingAuth::handler(Parcer& netes) {
 	netes.writeUint16(_errorCode, LittleEndian); // 2
 	//_key.reserve(10);
 
-	std::vector<UInt8> tempkey = { 0x00, 0x08, 0x7C, 0x35, 0x09, 0x19, 0xB2, 0x50, 0xD3, 0x49 };
+	vector<UInt8> tempkey = { 0x00, 0x08, 0x7C, 0x35, 0x09, 0x19, 0xB2, 0x50, 0xD3, 0x49 };
 	for (int i = 0; i < 10; ++i)
 	{
 		_key.push_back(tempkey[i]);
@@ -201,11 +232,13 @@ int OutcomingDate::packet()
 
 
 void Packet::NewPacket() {
-	std::shared_ptr<PacketFactory> od(new OutcomingDate());
-	std::shared_ptr<PacketFactory> ob(new OutcomingAuth());
-	std::unordered_map<int, std::shared_ptr<PacketFactory>> m = {
+	shared_ptr<PacketFactory> od(new OutcomingDate());
+	shared_ptr<PacketFactory> ob(new OutcomingAuth());
+	shared_ptr<PacketFactory> os(new IncomingAuth());
+	unordered_map<int, shared_ptr<PacketFactory>> m = {
 		{ 940, od },
-		{ 931, ob }
+		{ 931, ob },
+		{ 431, os}
 		// ...
 	};
 	pills = m;
@@ -229,7 +262,7 @@ void encode(int opcode, vector<UInt8>& packet)
 	pkg->process();
 	pkg->handler(t_netes);
 	int Len = t_netes.sizeBuffer() + 8;
-	std::cout << "LEN: " << Len; // 33
+	cout << "LEN: " << Len; // 33
 	PacketHeader header = { Len,128,opcode };
 	netes.writeUint16(header.Len,LittleEndian);
 	netes.writeUint32(header.UniqueId,BigEndian);
@@ -237,15 +270,29 @@ void encode(int opcode, vector<UInt8>& packet)
 	cout << "SizeNetes: " << netes.sizeBuffer(); //8
 	netes.writeBuffer(t_netes);
 	UInt8* temp = netes.ptrUint8();
-	std::cout << "SizeNetesOut: " << netes.sizeBuffer(); 
+	cout << "SizeNetesOut: " << netes.sizeBuffer(); 
 
 	for (int i = 0; i < netes.sizeBuffer(); i++)
 	{
 		packet.push_back(*(temp+i));
 	}
-	//std::cout << "Element: " << *(packet.begin()+1);
+	//cout << "Element: " << *(packet.begin()+1);
 
 }
 
-void decode(){}
+void decode(vector<UInt8>& packet)
+{
+	Parcer netes(packet, 6000);
+	Packet p;
+	p.NewPacket();
+	PacketHeader header;
+	netes.readUint16(header.Len, LittleEndian);
+	netes.readUint32(header.UniqueId, BigEndian);
+	netes.readUint16(header.Opcode, LittleEndian);
+	auto pck = p.getPck(header.Opcode);
+	pck->handler(netes);
+	pck->process();
+}
+
+#endif // _PACKET.H
 

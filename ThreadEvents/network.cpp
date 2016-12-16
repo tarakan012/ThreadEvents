@@ -1,5 +1,30 @@
 #include "network.h"
 
+
+void Parcer::readString(string value)
+{
+	stringstream stream("");
+	UInt8 array[100];
+	UInt16 lnString;
+	if (_endian == BigEndian) {
+		lnString = static_cast<UInt16>(_buffer[0]) |
+			static_cast<UInt16> (_buffer[1]) << 8;
+	}
+	else {
+		lnString = static_cast<UInt16>(_buffer[0]) << 8 |
+			static_cast<UInt16> (_buffer[1]);
+	}
+	_buffer.read(array, lnString);
+	for (size_t i = 0; i < lnString; i++)
+	{
+		stream << array[i];
+	}
+	value = stream.str();
+
+	
+}
+
+
 UInt8* Parcer::ptrUint8()
 {
 	return _buffer.begin();
@@ -10,7 +35,7 @@ void Parcer::writeBuffer(Parcer& parcer)
 	_buffer.write(parcer._buffer.begin(), parcer._buffer.used());
 }
 
-void Parcer::writeBuffer(std::vector<UInt8>& ptr)
+void Parcer::writeBuffer(vector<UInt8>& ptr)
 {
 	_buffer.write(&ptr[0], ptr.size());
 }
@@ -27,7 +52,7 @@ void Parcer::writeUint8(UInt8& value)
 
 int Parcer::sizeBuffer()
 {
-	//std::cout << _buffer.used();
+	//cout << _buffer.used();
 	return _buffer.used();
 }
 
@@ -36,6 +61,13 @@ _buffer(size, true)
 {
 
 }
+
+Parcer::Parcer(vector<UInt8>& packet, int size) : _endian(LittleEndian),
+_buffer(size, true)
+{
+	_buffer.write(&packet[0], packet.size());
+}
+
 Parcer* Parcer::setEndian(int endian)
 {
 	_endian = endian; // _endian(endian) ?
@@ -46,7 +78,7 @@ Parcer* Parcer::writeUint16(UInt16 value, int endian)
 {
 	_endian = endian;
 	UInt8 buf[2];
-	//std::cout << value << "**";
+	//cout << value << "**";
 	if (_endian == BigEndian) {
 		buf[0] = value;
 		buf[1] = value >> 8;
@@ -55,18 +87,18 @@ Parcer* Parcer::writeUint16(UInt16 value, int endian)
 		buf[0] = value >> 8;
 		buf[1] = value;
 	}
-	//std::cout << int(buf[0]) << "| |" << int(buf[1]) << "| |";
+	//cout << int(buf[0]) << "| |" << int(buf[1]) << "| |";
 	_buffer.write(buf, 2);
 
 	return this;
 }
 
-void Parcer::writeString(std::string value)
+void Parcer::writeString(string value)
 {
 	value += char(0);
 
 	UInt16 ln = value.size();
-	//std::cout << ln;
+	//cout << ln;
 	UInt8 buf[2];
 
 	if (_endian == BigEndian) {
@@ -79,17 +111,17 @@ void Parcer::writeString(std::string value)
 	}
 
 	_buffer.write(&buf[0], 2);
-	//std::cout << _buffer.size();
-	std::vector<UInt8> ints(std::begin(value), std::end(value)); // ¬роде бы пишет \0
+	//cout << _buffer.size();
+	vector<UInt8> ints(begin(value), end(value)); // ¬роде бы пишет \0
 	for(int i = 0; i < ln;i++)
 	{
-		//std::cout << ints[i];
+		//cout << ints[i];
 	}
 
 	_buffer.write(&ints[0], ints.size());
 	for (int i = 0; i < ln; i++)
 	{
-		//std::cout << int(_buffer[i]);
+		//cout << int(_buffer[i]);
 	}
 	
 }

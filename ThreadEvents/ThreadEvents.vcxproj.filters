@@ -19,6 +19,9 @@
     <Filter Include="library\network">
       <UniqueIdentifier>{8037b7ea-c6a5-490c-965a-146d51536944}</UniqueIdentifier>
     </Filter>
+    <Filter Include="packet">
+      <UniqueIdentifier>{4d662e16-e977-45ed-ba84-8ef1cb3408b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -27,13 +30,16 @@
     <ClCompile Include="network.cpp">
       <Filter>library\network</Filter>
     </ClCompile>
+    <ClCompile Include="packetAuth.cpp">
+      <Filter>packet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="packet.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="network.h">
       <Filter>library\network</Filter>
+    </ClInclude>
+    <ClInclude Include="packet.h">
+      <Filter>packet</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
