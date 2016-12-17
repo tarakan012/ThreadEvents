@@ -63,7 +63,7 @@ void IncomingAuth::handler(Parcer& netes)
 
 void IncomingAuth::process()
 {
-	cout << "Login: " <<_login << "Version: " << _clientVersion;
+	//cout << "Login: " <<_login << "Version: " << _clientVersion;
 }
 
 int IncomingAuth::packet()
@@ -262,15 +262,15 @@ void encode(int opcode, vector<UInt8>& packet)
 	pkg->process();
 	pkg->handler(t_netes);
 	int Len = t_netes.sizeBuffer() + 8;
-	cout << "LEN: " << Len; // 33
+	//cout << "LEN: " << Len; // 33
 	PacketHeader header = { Len,128,opcode };
 	netes.writeUint16(header.Len,LittleEndian);
 	netes.writeUint32(header.UniqueId,BigEndian);
 	netes.writeUint16(header.Opcode,LittleEndian);
-	cout << "SizeNetes: " << netes.sizeBuffer(); //8
+	//cout << "SizeNetes: " << netes.sizeBuffer(); //8
 	netes.writeBuffer(t_netes);
 	UInt8* temp = netes.ptrUint8();
-	cout << "SizeNetesOut: " << netes.sizeBuffer(); 
+	//cout << "SizeNetesOut: " << netes.sizeBuffer(); 
 
 	for (int i = 0; i < netes.sizeBuffer(); i++)
 	{

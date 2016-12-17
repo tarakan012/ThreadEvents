@@ -37,38 +37,10 @@ public:
 	void writeUint8(UInt8&);
 	UInt8* ptrUint8();
 
-	void readUint16(UInt16& value, int endian)
-	{
-		UInt8 temp[2];
-		if (endian == BigEndian) {
-			value = static_cast<UInt16>(_buffer[0]) |
-					static_cast<UInt16> (_buffer[1]) << 8;
-		}
-		else {
-			value = static_cast<UInt16>(_buffer[0]) << 8 |
-					static_cast<UInt16> (_buffer[1]);
-		}
-		cout << "buffer[1]=" << _buffer[1] << "Opcode: " << value;
-		_buffer.read(temp, 2);
-	}
-	void readUint32(UInt32& value, int endian)
-	{
-		UInt8 temp[4];
-
-		if (endian == BigEndian) {
-			value = static_cast<UInt32>( _buffer[0] ) |
-					static_cast<UInt32> ( _buffer[1] ) << 8 |
-					static_cast<UInt32> ( _buffer[2] ) << 16 |
-					static_cast<UInt32> ( _buffer[1] ) << 24;
-		}
-		else {
-			value = static_cast<UInt32>(_buffer[0]) << 24 |
-				static_cast<UInt32> (_buffer[1]) << 16 |
-				static_cast<UInt32> (_buffer[2]) << 8 |
-				static_cast<UInt32> (_buffer[1]);
-		}
-		_buffer.read(temp, 4);
-	}
+	void readUint16(UInt16&, int);
+	
+	void readUint32(UInt32&, int);
+	
 	void readString(string value);
 private:
 	Poco::BasicFIFOBuffer<UInt8> _buffer;

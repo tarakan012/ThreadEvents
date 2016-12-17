@@ -1,8 +1,44 @@
 #include "network.h"
 
+void Parcer::readUint16(UInt16& value, int endian)
+{
+	endian = LittleEndian;
+	UInt8 temp[2];
+	if (endian == BigEndian) {
+		value = static_cast<UInt16>(_buffer[0]) |
+			static_cast<UInt16> (_buffer[1]) << 8;
+	}
+	else {
+		value = static_cast<UInt16>(_buffer[0]) << 8 |
+			static_cast<UInt16> (_buffer[1]);
+	}
+	cout << "buffer[1]=" << _buffer[1] << "Opcode: " << value;
+	_buffer.read(temp, 2);
+}
+void Parcer::readUint32(UInt32& value, int endian)
+{
+	endian = BigEndian;
+	UInt8 temp[4];
+
+	if (endian == BigEndian) {
+		value = static_cast<UInt32>(_buffer[0]) |
+			static_cast<UInt32> (_buffer[1]) << 8 |
+			static_cast<UInt32> (_buffer[2]) << 16 |
+			static_cast<UInt32> (_buffer[1]) << 24;
+	}
+	else {
+		value = static_cast<UInt32>(_buffer[0]) << 24 |
+			static_cast<UInt32> (_buffer[1]) << 16 |
+			static_cast<UInt32> (_buffer[2]) << 8 |
+			static_cast<UInt32> (_buffer[1]);
+	}
+	_buffer.read(temp, 4);
+}
 
 void Parcer::readString(string value)
 {
+	UInt8 temp[2];
+
 	stringstream stream("");
 	UInt8 array[100];
 	UInt16 lnString;
@@ -14,13 +50,16 @@ void Parcer::readString(string value)
 		lnString = static_cast<UInt16>(_buffer[0]) << 8 |
 			static_cast<UInt16> (_buffer[1]);
 	}
+	cout << " buffer[0]= " << int(_buffer[0]) << " buffer[1]= " << int(_buffer[1]);
+	_buffer.read(temp, 2);
+
 	_buffer.read(array, lnString);
 	for (size_t i = 0; i < lnString; i++)
 	{
 		stream << array[i];
 	}
 	value = stream.str();
-
+	cout << " String: " << value;
 	
 }
 
