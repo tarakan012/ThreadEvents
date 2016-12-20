@@ -47,5 +47,5 @@ private:
 	int _endian;
 };
 
-#endif
+#endif //_NETWORK_H
 

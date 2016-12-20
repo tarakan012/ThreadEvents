@@ -22,6 +22,15 @@
     <Filter Include="packet">
       <UniqueIdentifier>{4d662e16-e977-45ed-ba84-8ef1cb3408b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="database">
+      <UniqueIdentifier>{e918fe83-3aa9-4841-a8e4-e0bcede31cbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="library\crypto">
+      <UniqueIdentifier>{0402797d-9707-48ff-9094-cd1324b82eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="land">
+      <UniqueIdentifier>{7e60b5ba-5265-48ec-a851-8557207fd9a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -33,6 +42,18 @@
     <ClCompile Include="packetAuth.cpp">
       <Filter>packet</Filter>
     </ClCompile>
+    <ClCompile Include="database.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
+    <ClCompile Include="server.cpp">
+      <Filter>land</Filter>
+    </ClCompile>
+    <ClCompile Include="serverHandler.cpp">
+      <Filter>land</Filter>
+    </ClCompile>
+    <ClCompile Include="user.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="network.h">
@@ -40,6 +61,21 @@
     </ClInclude>
     <ClInclude Include="packet.h">
       <Filter>packet</Filter>
+    </ClInclude>
+    <ClInclude Include="database.h">
+      <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="crypt.h">
+      <Filter>library\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="server.h">
+      <Filter>land</Filter>
+    </ClInclude>
+    <ClInclude Include="serverHandler.h">
+      <Filter>land</Filter>
+    </ClInclude>
+    <ClInclude Include="user.h">
+      <Filter>database</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
