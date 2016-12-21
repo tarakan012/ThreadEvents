@@ -35,6 +35,16 @@ public:
 	virtual void handler(Parcer&) = 0;
 };
 
+class Packet
+{
+public:
+	auto getPck(int);
+	void NewPacket();
+private:
+	unordered_map<int, shared_ptr<PacketFactory>> pills;
+
+};
+
 class IncomingAuth : public PacketFactory
 {
 public:
@@ -52,14 +62,6 @@ private:
 
 
 
-class Packet
-{
-public:
-	auto getPck(int);
-	void NewPacket();
-private:
-	unordered_map<int, shared_ptr<PacketFactory>> pills;
-};
 
 
 class OutcomingDate : public PacketFactory
@@ -135,6 +137,7 @@ struct PacketHeader
 	UInt16 Opcode;
 };
 
+void encode(int , vector<UInt8>&);
 
 
 #endif // _PACKET_H

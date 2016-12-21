@@ -54,6 +54,18 @@
     <ClCompile Include="user.cpp">
       <Filter>database</Filter>
     </ClCompile>
+    <ClCompile Include="des_example.c">
+      <Filter>library\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="des.h">
+      <Filter>library\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="des.cpp">
+      <Filter>library\crypto</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="network.h">
@@ -77,5 +89,10 @@
     <ClInclude Include="user.h">
       <Filter>database</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="config.ini">
+      <Filter>Файлы исходного кода</Filter>
+    </None>
   </ItemGroup>
 </Project>

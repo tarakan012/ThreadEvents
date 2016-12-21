@@ -8,7 +8,8 @@
 
 //#include "database.h"
 //#include <pqxx/pqxx>
-//#include <sstream>
+#include "crypt.h"
+#include <stdio.h>
 #include "server.h"
 
 
@@ -20,10 +21,17 @@
 
 
 
-void main()
+int main(int argc, char* argv[])
 {
-	//Application app;
-	//app.run();
+	if (argc = 1) {
+		string configPath = "resource/config.ini";
+	}
+	string sKey = "5f4dcc3b5aa765d61d8327de";
+	string sText = "[8-15 17";
+	EncryptPassword(sKey, sText);
+	
+	Application app;
+	app.run();
 	//Database us;
 	
 	/*
@@ -66,6 +74,7 @@ void main()
 
 	//	}
 	//}
+	return 0;
 }
 
 	 

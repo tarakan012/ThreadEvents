@@ -6,7 +6,7 @@
 #include <pqxx/pqxx>
 #include "Poco/Thread.h"
 #include "Poco/Runnable.h"
-//#include "packet.h"
+#include "packet.h"
 
 #include "Poco/Net/StreamSocket.h"
 #include "Poco/Net/ServerSocket.h"
