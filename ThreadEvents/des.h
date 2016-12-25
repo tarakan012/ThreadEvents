@@ -54,6 +54,7 @@ void des_crypt(uchar in[], uchar out[], uchar key[][6]);
 
 void three_des_key_schedule(uchar key[], uchar schedule[][16][6], uint mode);
 
+
 void three_des_crypt(uchar in[], uchar out[], uchar key[][16][6]);
 
 /************************************/

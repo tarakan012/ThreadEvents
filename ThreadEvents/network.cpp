@@ -35,7 +35,7 @@ void Parcer::readUint32(UInt32& value, int endian)
 	_buffer.read(temp, 4);
 }
 
-void Parcer::readString(string value)
+void Parcer::readString(string& value)
 {
 	UInt8 temp[2];
 
@@ -54,13 +54,34 @@ void Parcer::readString(string value)
 	_buffer.read(temp, 2);
 
 	_buffer.read(array, lnString);
-	for (size_t i = 0; i < lnString; i++)
+	for (size_t i = 0; i < lnString-1; i++)
 	{
 		stream << array[i];
 	}
 	value = stream.str();
 	cout << " String: " << value;
 	
+}
+
+void Parcer::readByte(ustring& ustr)
+{
+	UInt8 temp[2];
+	UInt8 array[25]="";
+	UInt16 lnString;
+	if (_endian == BigEndian) {
+		lnString = static_cast<UInt16>(_buffer[0]) |
+			static_cast<UInt16> (_buffer[1]) << 8;
+	}
+	else {
+		lnString = static_cast<UInt16>(_buffer[0]) << 8 |
+			static_cast<UInt16> (_buffer[1]);
+	}
+	_buffer.read(temp, 2);
+
+	_buffer.read(&array[0], lnString);
+	ustring tempustr(array);
+	ustr = tempustr;
+
 }
 
 

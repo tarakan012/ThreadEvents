@@ -2,7 +2,7 @@
 
 #ifndef _PACKET_H
 #define _PACKET_H
-
+#define NOMINMAX
 
 
 #include "Poco/DateTime.h"
@@ -15,8 +15,12 @@
 #include <vector>
 #include <unordered_map>
 #include <memory>
+#include <pqxx/pqxx>
+#include "crypt.h"
 
+#include "user.h"
 #include "network.h"
+using namespace pqxx;
 
 using Poco::DateTime;
 using Poco::DateTimeFormatter;
@@ -30,34 +34,39 @@ using namespace std;
 
 class PacketFactory {
 public:
-	virtual int packet() = 0;
-	virtual void process() = 0;
+	virtual int packet(connection*) = 0;
+	virtual int process() = 0;
 	virtual void handler(Parcer&) = 0;
 };
 
 class Packet
 {
 public:
+	Packet(connection* db) :_db(db) {};
 	auto getPck(int);
 	void NewPacket();
+	void encode(int, vector<UInt8>&);
+	void decode(vector<UInt8>&);
 private:
 	unordered_map<int, shared_ptr<PacketFactory>> pills;
+	connection* _db;
 
 };
 
 class IncomingAuth : public PacketFactory
 {
 public:
-	int packet();
-	void process();
+	int packet(connection* db) { _db = db; return 0; };
+	int process();
 	void handler(Parcer&);
 private:
 	string _key;
 	string _login;
-	string _password;
+	 ustring _password;
 	string _mac;
 	UInt16 _isCheat;
 	UInt16 _clientVersion;
+	connection* _db;
 };
 
 
@@ -67,8 +76,8 @@ private:
 class OutcomingDate : public PacketFactory
 {
 public:
-	int packet();
-	void process();
+	int packet(connection*);
+	int process();
 	void handler(Parcer&);
 private:
 	string _time;
@@ -114,8 +123,8 @@ class OutcomingAuth : public PacketFactory
 {
 public:
 	
-	int packet();
-	void process();
+	int packet(connection*);
+	int process();
 	void handler(Parcer&);
 private:
 	UInt16 _errorCode;
@@ -137,7 +146,7 @@ struct PacketHeader
 	UInt16 Opcode;
 };
 
-void encode(int , vector<UInt8>&);
+//void encode(int , vector<UInt8>&);
 
 
 #endif // _PACKET_H

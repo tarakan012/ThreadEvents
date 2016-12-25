@@ -1,6 +1,6 @@
 
 
-//#define NOMINMAX
+#define NOMINMAX
 
 //#include "packet.h"
 //#include "user.h"
@@ -8,7 +8,7 @@
 
 //#include "database.h"
 //#include <pqxx/pqxx>
-#include "crypt.h"
+//#include "crypt.h"
 #include <stdio.h>
 #include "server.h"
 
@@ -26,9 +26,9 @@ int main(int argc, char* argv[])
 	if (argc = 1) {
 		string configPath = "resource/config.ini";
 	}
-	string sKey = "5f4dcc3b5aa765d61d8327de";
-	string sText = "[8-15 17";
-	EncryptPassword(sKey, sText);
+	//string sKey = "5f4dcc3b5aa765d61d8327de";
+	//string sText = "[8-15 17";
+	//EncryptPassword(sKey, sText);
 	
 	Application app;
 	app.run();

@@ -8,7 +8,9 @@ void ConnectHundler::run()
 {
 	vector<UInt8> packet1;
 	vector<UInt8> outbuffer(100);
-	encode(940, packet1);
+	Packet p(_db);
+	p.encode(940, packet1);
 	_client.sendBytes(&packet1[0], packet1.size());
 	int firstSize = _client.receiveBytes(&outbuffer[0],100);
+	p.decode(outbuffer);
 }

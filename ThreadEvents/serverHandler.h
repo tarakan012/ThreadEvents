@@ -2,11 +2,13 @@
 
 #ifndef _SERVER_HANDLER_H
 #define _SERVER_HANDLER_H
+#define NOMINMAX
 
-#include <pqxx/pqxx>
 #include "Poco/Thread.h"
 #include "Poco/Runnable.h"
+
 #include "packet.h"
+//#include <pqxx/pqxx>
 
 #include "Poco/Net/StreamSocket.h"
 #include "Poco/Net/ServerSocket.h"
@@ -17,7 +19,7 @@ using Poco::Net::ServerSocket;
 using Poco::Net::StreamSocket;
 using Poco::Thread;
 
-using namespace pqxx;
+//using namespace pqxx;
 
 class ConnectHundler : public Poco::Runnable
 {

@@ -9,10 +9,12 @@ using namespace pqxx;
 class User
 {
 public:
-	void getByName(string, work&);
+	User(connection* db) :_db(db) {};
+	string getByName(string&);
 private:
 	string _login;
 	string _password;
 	bool _isActive;
+	connection* _db;
 	
 };

@@ -66,6 +66,9 @@
     <ClCompile Include="des.cpp">
       <Filter>library\crypto</Filter>
     </ClCompile>
+    <ClCompile Include="dess.cpp">
+      <Filter>library\crypto</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="network.h">
@@ -88,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="user.h">
       <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto.h">
+      <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

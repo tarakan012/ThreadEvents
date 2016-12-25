@@ -154,8 +154,11 @@
   <ItemGroup>
     <ClCompile Include="crypto.cpp" />
     <ClCompile Include="database.cpp" />
-    <ClCompile Include="des.cpp" />
+    <ClCompile Include="des.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="des.h" />
+    <ClCompile Include="dess.cpp" />
     <ClCompile Include="des_example.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -168,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="crypt.h" />
+    <ClInclude Include="crypto.h" />
     <ClInclude Include="database.h" />
     <ClInclude Include="network.h" />
     <ClInclude Include="packet.h" />

@@ -14,6 +14,8 @@ using Poco::UInt8;
 
 using namespace std;
 
+typedef basic_string<uint8_t> ustring;
+
 
 const enum
 {
@@ -41,7 +43,8 @@ public:
 	
 	void readUint32(UInt32&, int);
 	
-	void readString(string value);
+	void readString(string& value);
+	void readByte(ustring & str);
 private:
 	Poco::BasicFIFOBuffer<UInt8> _buffer;
 	int _endian;

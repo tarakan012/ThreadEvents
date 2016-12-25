@@ -2,10 +2,12 @@
 
 #ifndef _SERVER_H
 #define _SERVER_H
+#define NOMINMAX
+
 #include "serverHandler.h"
-#include <pqxx/pqxx>
 #include "Poco/Thread.h"
 #include "Poco/Runnable.h"
+//#include <pqxx/pqxx>
 //#include "packet.h"
 
 
@@ -21,7 +23,7 @@ using Poco::Net::ServerSocket;
 using Poco::Net::StreamSocket;
 using Poco::Thread;
 
-using namespace pqxx;
+//using namespace pqxx;
 
 
 struct ConfigBase

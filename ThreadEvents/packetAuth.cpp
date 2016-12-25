@@ -4,22 +4,28 @@ void IncomingAuth::handler(Parcer& netes)
 {
 	netes.readString(_key);
 	netes.readString(_login);
-	netes.readString(_password);
+	netes.readByte(_password);
 	netes.readString(_mac);
 	netes.readUint16(_isCheat, LittleEndian);
 	netes.readUint16(_clientVersion, LittleEndian);
 
 }
 
-void IncomingAuth::process()
+int IncomingAuth::process()
 {
+	User user(_db);
+	string str = "[8-15 17:9:15:743]";
+	string key = user.getByName(_login);
+	ustring enStr = EncryptPassword(key,str);
+	if (_password == enStr)
+	{
+		cout << "Hello ilya";
+	}
 	//cout << "Login: " <<_login << "Version: " << _clientVersion;
-}
-
-int IncomingAuth::packet()
-{
 	return 0;
 }
+
+
 
 auto Packet::getPck(int opcode)
 {
@@ -75,28 +81,33 @@ void OutcomingAuth::handler(Parcer& netes) {
 	netes.writeUint32(_dwFlag, LittleEndian); // 4
 }
 
-int OutcomingAuth::packet()
+
+
+int OutcomingDate::packet(connection *)
 {
 	return 0;
 }
 
-void OutcomingDate::process()
+int OutcomingDate::process()
 {
 	DateTime now;
 	now.makeUTC(10800);
-	_time = DateTimeFormatter::format(now, "[%m - %d %H:%M:%S:%i]");
+	_time = "[8-15 17:9:15:743]";// DateTimeFormatter::format(now, "[%m - %d %H:%M:%S:%i]");
+	return 0;
 }
 
 void OutcomingDate::handler(Parcer& netes)
 {
 	netes.writeString(_time);
 }
-int OutcomingDate::packet()
+
+
+int OutcomingAuth::packet(connection *)
 {
 	return 0;
 }
 
-void OutcomingAuth::process()
+int OutcomingAuth::process()
 {
 	_errorCode = 0;
 	_pincode = 1;
@@ -107,6 +118,7 @@ void OutcomingAuth::process()
 	_character[0] = charOne;
 	_character[1] = charTwo;
 	_character[2] = charThree;
+	return 0;
 }
 
 void Packet::NewPacket() {
@@ -122,13 +134,13 @@ void Packet::NewPacket() {
 	pills = m;
 }
 
-void encode(int opcode, vector<UInt8>& packet)
+void Packet::encode(int opcode, vector<UInt8>& packet)
 {
 	Parcer netes(6000);
 	Parcer t_netes(5500);
-	Packet p;
-	p.NewPacket();
-	auto pkg = p.getPck(opcode);
+	
+	(*this).NewPacket();
+	auto pkg = (*this).getPck(opcode);
 	pkg->process();
 	pkg->handler(t_netes);
 	int Len = t_netes.sizeBuffer() + 8;
@@ -150,16 +162,17 @@ void encode(int opcode, vector<UInt8>& packet)
 
 }
 
-void decode(vector<UInt8>& packet)
+void Packet::decode(vector<UInt8>& packet)
 {
 	Parcer netes(packet, 6000);
-	Packet p;
-	p.NewPacket();
+	
+	(*this).NewPacket();
 	PacketHeader header;
 	netes.readUint16(header.Len, LittleEndian);
 	netes.readUint32(header.UniqueId, BigEndian);
 	netes.readUint16(header.Opcode, LittleEndian);
-	auto pck = p.getPck(header.Opcode);
+	auto pck = (*this).getPck(header.Opcode);
+	pck->packet(_db);
 	pck->handler(netes);
 	pck->process();
 }
