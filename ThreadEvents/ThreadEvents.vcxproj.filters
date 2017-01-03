@@ -31,6 +31,12 @@
     <Filter Include="land">
       <UniqueIdentifier>{7e60b5ba-5265-48ec-a851-8557207fd9a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="support">
+      <UniqueIdentifier>{76c2d90f-2bb4-4715-bad2-de4de78af5b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entitie">
+      <UniqueIdentifier>{0ca906c4-7476-4464-93ba-446e50ee731b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -69,6 +75,12 @@
     <ClCompile Include="dess.cpp">
       <Filter>library\crypto</Filter>
     </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>entitie</Filter>
+    </ClCompile>
+    <ClCompile Include="packet_screen_character.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="network.h">
@@ -94,6 +106,15 @@
     </ClInclude>
     <ClInclude Include="crypto.h">
       <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="support_opcode.h">
+      <Filter>support</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>entitie</Filter>
+    </ClInclude>
+    <ClInclude Include="packet_screen_character.h">
+      <Filter>packet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

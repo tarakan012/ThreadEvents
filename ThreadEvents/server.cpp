@@ -11,16 +11,25 @@ Application::Application()
 
 
 	_db = new connection("dbname=" + dbname + " host=" + host + " user=" + user+ " password=" + password);
-	//sql = new work(*db);
 }
 
 void Application::run()
 {
 	SocketAddress Address("127.0.0.1:1973");
 	ServerSocket Listen(Address);
+	
 	for (; ;)
 	{
 		StreamSocket client = Listen.acceptConnection();
+
+		AutoPtr<ConsoleChannel> console(new ConsoleChannel);
+		AutoPtr<PatternFormatter> formater(new PatternFormatter);
+		formater->setProperty("pattern", "%Y-%m-%d %H:%M:%S %s: %t");
+		AutoPtr<FormattingChannel> formatingChannel(new FormattingChannel(formater, console));
+		Logger::root().setChannel(formatingChannel);
+
+		Logger::get("Console").information("Connection from " + client.peerAddress().toString());
+		
 		ConnectHundler ch(_db, client);
 		
 		Thread thread;

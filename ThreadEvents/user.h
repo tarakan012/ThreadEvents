@@ -11,6 +11,8 @@ class User
 public:
 	User(connection* db) :_db(db) {};
 	string getByName(string&);
+	void update(int);
+	void changeIsActive(bool);
 private:
 	string _login;
 	string _password;

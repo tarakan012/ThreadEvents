@@ -17,9 +17,10 @@
 #include <memory>
 #include <pqxx/pqxx>
 #include "crypt.h"
-
+#include "support_opcode.h"
 #include "user.h"
 #include "network.h"
+#include "player.h"
 using namespace pqxx;
 
 using Poco::DateTime;
@@ -35,21 +36,22 @@ using namespace std;
 class PacketFactory {
 public:
 	virtual int packet(connection*) = 0;
-	virtual int process() = 0;
+	virtual int process(Player&) = 0;
 	virtual void handler(Parcer&) = 0;
 };
 
 class Packet
 {
 public:
-	Packet(connection* db) :_db(db) {};
+	Packet(connection* db);
 	auto getPck(int);
 	void NewPacket();
 	void encode(int, vector<UInt8>&);
-	void decode(vector<UInt8>&);
+	int decode(vector<UInt8>&);
 private:
 	unordered_map<int, shared_ptr<PacketFactory>> pills;
 	connection* _db;
+	Player _player;
 
 };
 
@@ -57,7 +59,7 @@ class IncomingAuth : public PacketFactory
 {
 public:
 	int packet(connection* db) { _db = db; return 0; };
-	int process();
+	int process(Player&);
 	void handler(Parcer&);
 private:
 	string _key;
@@ -69,6 +71,18 @@ private:
 	connection* _db;
 };
 
+class IncomingExit : public PacketFactory
+{
+public:
+	int packet(connection* db) { _db = db; return 0; };
+	int process(Player&);
+	void handler(Parcer&);
+private:
+	
+	connection* _db;
+};
+
+
 
 
 
@@ -77,7 +91,7 @@ class OutcomingDate : public PacketFactory
 {
 public:
 	int packet(connection*);
-	int process();
+	int process(Player&);
 	void handler(Parcer&);
 private:
 	string _time;
@@ -124,7 +138,7 @@ class OutcomingAuth : public PacketFactory
 public:
 	
 	int packet(connection*);
-	int process();
+	int process(Player&);
 	void handler(Parcer&);
 private:
 	UInt16 _errorCode;

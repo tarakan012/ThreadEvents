@@ -12,7 +12,6 @@ void Parcer::readUint16(UInt16& value, int endian)
 		value = static_cast<UInt16>(_buffer[0]) << 8 |
 			static_cast<UInt16> (_buffer[1]);
 	}
-	cout << "buffer[1]=" << _buffer[1] << "Opcode: " << value;
 	_buffer.read(temp, 2);
 }
 void Parcer::readUint32(UInt32& value, int endian)
@@ -50,7 +49,6 @@ void Parcer::readString(string& value)
 		lnString = static_cast<UInt16>(_buffer[0]) << 8 |
 			static_cast<UInt16> (_buffer[1]);
 	}
-	cout << " buffer[0]= " << int(_buffer[0]) << " buffer[1]= " << int(_buffer[1]);
 	_buffer.read(temp, 2);
 
 	_buffer.read(array, lnString);
@@ -59,7 +57,6 @@ void Parcer::readString(string& value)
 		stream << array[i];
 	}
 	value = stream.str();
-	cout << " String: " << value;
 	
 }
 
@@ -138,7 +135,6 @@ Parcer* Parcer::writeUint16(UInt16 value, int endian)
 {
 	_endian = endian;
 	UInt8 buf[2];
-	//cout << value << "**";
 	if (_endian == BigEndian) {
 		buf[0] = value;
 		buf[1] = value >> 8;
@@ -147,7 +143,6 @@ Parcer* Parcer::writeUint16(UInt16 value, int endian)
 		buf[0] = value >> 8;
 		buf[1] = value;
 	}
-	//cout << int(buf[0]) << "| |" << int(buf[1]) << "| |";
 	_buffer.write(buf, 2);
 
 	return this;

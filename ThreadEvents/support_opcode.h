@@ -1,0 +1,17 @@
+#pragma once
+
+
+#ifndef _OPCODES_H_
+#define _OPCODES_H_
+
+#define OP_SERVER_LOGIN 931
+#define OP_CLIENT_LOGOUT 432
+#define OP_SERVER_CHAPSTR 940
+#define OP_CLIENT_LOGIN 431
+#define OP_CLIENT_DELCHA 436
+#define OP_SERVER_DELCHA 936
+#define OP_CLIENT_NEWCHA 435
+#define OP_SERVER_NEWCHA 935
+
+
+#endif

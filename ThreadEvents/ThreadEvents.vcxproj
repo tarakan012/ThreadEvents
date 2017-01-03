@@ -165,6 +165,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="network.cpp" />
     <ClCompile Include="packetAuth.cpp" />
+    <ClCompile Include="packet_screen_character.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="server.cpp" />
     <ClCompile Include="serverHandler.cpp" />
     <ClCompile Include="user.cpp" />
@@ -175,8 +177,11 @@
     <ClInclude Include="database.h" />
     <ClInclude Include="network.h" />
     <ClInclude Include="packet.h" />
+    <ClInclude Include="packet_screen_character.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="serverHandler.h" />
+    <ClInclude Include="support_opcode.h" />
     <ClInclude Include="user.h" />
   </ItemGroup>
   <ItemGroup>

@@ -7,10 +7,14 @@
 #include "serverHandler.h"
 #include "Poco/Thread.h"
 #include "Poco/Runnable.h"
-//#include <pqxx/pqxx>
-//#include "packet.h"
+
+#include"Poco/Logger.h"
+#include "Poco/ConsoleChannel.h"
+#include "Poco/AutoPtr.h"
 
 
+#include "Poco/PatternFormatter.h"
+#include "Poco/FormattingChannel.h"
 #include "Poco/Net/StreamSocket.h"
 #include "Poco/Net/ServerSocket.h"
 #include "Poco/Util/IniFileConfiguration.h"
@@ -18,10 +22,14 @@
 
 using Poco::Net::SocketAddress;
 using Poco::AutoPtr;
+using  Poco::PatternFormatter;
+using Poco::FormattingChannel;
+using Poco::ConsoleChannel;
 using Poco::Util::IniFileConfiguration;
 using Poco::Net::ServerSocket;
 using Poco::Net::StreamSocket;
 using Poco::Thread;
+using Poco::Logger;
 
 //using namespace pqxx;
 

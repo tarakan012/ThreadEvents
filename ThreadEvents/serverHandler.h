@@ -6,7 +6,6 @@
 
 #include "Poco/Thread.h"
 #include "Poco/Runnable.h"
-
 #include "packet.h"
 //#include <pqxx/pqxx>
 
